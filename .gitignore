@@ -1,0 +1,5 @@
+
+# Garante que a pasta data e todo o seu conteúdo sejam ignorados
+data/
+data/**
+venv/
