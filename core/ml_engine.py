@@ -3,14 +3,21 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 
 def train_models(X, y_price, y_sellout):
-    # make_pipeline automatically scales the inputs (Capacity, Demand, IBGE)
-    # so they carry equal weight in the mathematical formula.
+    """
+    Trains the machine learning pipelines using historical box office data.
     
-    # Ridge handles the continuous ticket price prediction
-    regressor = make_pipeline(StandardScaler(), Ridge(random_state=42))
+    X: Features DataFrame (capacity, spotify_demand, ibge_index)
+    y_price: Continuous target (actual_ticket_price_brl)
+    y_sellout: Binary target (sold_out)
+    """
+    
+    # Ridge Regression for Ticket Price Optimization
+    # L2 Regularization prevents overfitting to outlier stadium shows
+    regressor = make_pipeline(StandardScaler(), Ridge(alpha=1.0, random_state=42))
     regressor.fit(X, y_price)
     
-    # Logistic Regression creates a smooth 0-100% probability curve for the sellout
+    # Logistic Regression for Sell-out Probability
+    # Generates a continuous 0.0 to 1.0 probability curve based on historical fill rates
     classifier = make_pipeline(StandardScaler(), LogisticRegression(random_state=42))
     classifier.fit(X, y_sellout)
     
